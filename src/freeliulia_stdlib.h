@@ -217,6 +217,95 @@ static inline bool 배열포함(int64_t* arr, int64_t size, int64_t value) {
     return false;
 }
 
+/* ======================== 고급 문자열 함수 ======================== */
+
+/* 문자열 반복 (N회 반복) */
+static inline char* 반복(const char* str, int64_t count) {
+    if (str == NULL || count <= 0) {
+        char* empty = (char*)malloc(1);
+        empty[0] = '\0';
+        return empty;
+    }
+
+    size_t str_len = strlen(str);
+    size_t total_len = str_len * count;
+    char* result = (char*)malloc(total_len + 1);
+
+    for (int64_t i = 0; i < count; i++) {
+        strcpy(result + i * str_len, str);
+    }
+    result[total_len] = '\0';
+
+    return result;
+}
+
+/* 문자열 채우기 (왼쪽 공백 패딩으로 지정 길이 도달) */
+static inline char* 채우기(const char* str, int64_t 길이) {
+    if (str == NULL) return NULL;
+
+    size_t str_len = strlen(str);
+    if ((int64_t)str_len >= 길이) {
+        /* 이미 충분히 길면 원본 복사 */
+        char* result = (char*)malloc(str_len + 1);
+        strcpy(result, str);
+        return result;
+    }
+
+    int64_t pad_count = 길이 - str_len;
+    char* result = (char*)malloc(길이 + 1);
+
+    /* 앞에 공백 추가 */
+    for (int64_t i = 0; i < pad_count; i++) {
+        result[i] = ' ';
+    }
+
+    /* 문자열 추가 */
+    strcpy(result + pad_count, str);
+    result[길이] = '\0';
+
+    return result;
+}
+
+/* 문자열 나누기 (첫 번째 구분자로 분할, 앞부분만 반환) */
+static inline char* 나누기_앞(const char* str, const char* 구분자) {
+    if (str == NULL || 구분자 == NULL) return NULL;
+
+    char* pos = strstr(str, 구분자);
+    if (pos == NULL) {
+        /* 구분자를 찾지 못하면 원본 전체 반환 */
+        char* result = (char*)malloc(strlen(str) + 1);
+        strcpy(result, str);
+        return result;
+    }
+
+    size_t before_len = pos - str;
+    char* result = (char*)malloc(before_len + 1);
+    strncpy(result, str, before_len);
+    result[before_len] = '\0';
+
+    return result;
+}
+
+/* 문자열 나누기 (첫 번째 구분자로 분할, 뒷부분만 반환) */
+static inline char* 나누기_뒷(const char* str, const char* 구분자) {
+    if (str == NULL || 구분자 == NULL) return NULL;
+
+    char* pos = strstr(str, 구분자);
+    if (pos == NULL) {
+        /* 구분자를 찾지 못하면 빈 문자열 반환 */
+        char* result = (char*)malloc(1);
+        result[0] = '\0';
+        return result;
+    }
+
+    size_t delim_len = strlen(구분자);
+    size_t after_len = strlen(pos + delim_len);
+    char* result = (char*)malloc(after_len + 1);
+    strcpy(result, pos + delim_len);
+
+    return result;
+}
+
 /* ======================== 타입 검사 함수 ======================== */
 
 /* 정수 타입 검사 */
