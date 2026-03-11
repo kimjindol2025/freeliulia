@@ -35,9 +35,11 @@ FreeLang의 강점    ×    Julia의 기술
 │   ├── type_inference.jl        (Julia 원본 타입 추론)
 │   ├── codegen.jl               (Julia 원본 코드 생성)
 │   ├── compiler.jl              (Julia 원본 컴파일러)
-│   └── freeliulia_lexer.jl      (🆕 한글 토크나이저)
+│   ├── freeliulia_lexer.jl      (🆕 한글 토크나이저 - 563줄)
+│   └── freeliulia_parser.jl     (🆕 한글 파서 - 842줄)
 ├── test/
-│   └── (테스트 파일 예정)
+│   ├── parser_test.jl           (🆕 파서 테스트 - 10 테스트 케이스)
+│   └── (추가 테스트 예정)
 ├── analysis/
 │   └── 01-ARCHITECTURE.md       (Julia 아키텍처)
 ├── docs/
@@ -196,20 +198,25 @@ Typed SSA IR
 
 ```
 ✅ Phase 1: 언어 설계 (완료)
-  ├─ 문법 정의
-  ├─ 타입 시스템
-  └─ 표준 라이브러리 명세
+  ├─ 문법 정의 (25 한글 키워드)
+  ├─ 타입 시스템 (8 타입)
+  └─ 표준 라이브러리 명세 (20+ 함수)
 
-✅ Phase 2: 핵심 컴포넌트 (진행 중)
-  ├─ Lexer (한글 토크나이저) ✅ 완료
-  ├─ Parser (파서) - 기존 Julia 코드 활용
-  ├─ Lowering
-  ├─ Type Inference
-  ├─ Codegen
-  └─ Optimizer
+✅ Phase 2: 핵심 컴포넌트 (진행 중 - 50% 완료)
+  ├─ Lexer (한글 토크나이저) ✅ 완료 (563줄)
+  │   - 89 토큰 타입 지원
+  │   - UTF-8 한글 문자 처리 (U+AC00-U+D7AF)
+  ├─ Parser (한글 파서) ✅ 완료 (842줄)
+  │   - AST 생성 (20+ 노드 타입)
+  │   - Recursive Descent Parser
+  │   - 10 테스트 케이스 통과
+  ├─ Lowering (로워링) - Julia 코드 활용
+  ├─ Type Inference (타입 추론) - Julia 코드 활용
+  ├─ Codegen (코드 생성) - Julia 코드 활용
+  └─ Optimizer (최적화) - Julia 코드 활용
 
 ⏳ Phase 3: 자체 호스팅 (예정)
-  ├─ FreeLiulia로 자신 컴파일
+  ├─ FreeLiulia → C 컴파일러
   └─ 부트스트래핑 완성
 
 ⏳ Phase 4: 확장 및 최적화 (예정)
@@ -221,11 +228,13 @@ Typed SSA IR
 
 | 항목 | 값 |
 |------|-----|
-| 새로운 파일 | 2개 (Spec, Lexer) |
+| 새로운 파일 | 3개 (Spec, Lexer, Parser) |
 | Julia 코드 통합 | 6개 파일 (~2,400줄) |
+| 한글 토크나이저 | 563줄 (89 토큰 타입) |
+| 한글 파서 | 842줄 (20+ AST 노드) |
+| 테스트 | 10개 테스트 케이스 |
 | 한글 키워드 | 25개 |
-| 토큰 타입 | 50+개 |
-| 예제 코드 | 5개 |
+| 총 코드 | 4,400+줄 |
 
 ---
 
